@@ -1,6 +1,7 @@
 const fs = require('fs');
 const https = require('https');
 const http = require('http');
+const cors = require('cors');
 const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
 const { typeDefs, resolvers } = require('./graphql/schema.js');
@@ -14,10 +15,18 @@ const configurations = {
 const environment = process.env.NODE_ENV || 'development'
 const config = configurations[environment]
 
-const apollo = new ApolloServer({ typeDefs, resolvers })
+const apollo = new ApolloServer({
+  typeDefs, resolvers, context: {
+    me: {
+      id: '1',
+      username: 'Robin Wieruchcontext',
+    },
+  },
+});
 
-const app = express()
-apollo.applyMiddleware({ app })
+const app = express();
+app.use(cors());
+apollo.applyMiddleware({ app });
 
 // Create the HTTPS or HTTP server, per configuration
 let server
