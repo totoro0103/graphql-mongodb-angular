@@ -1,52 +1,46 @@
-const { ApolloServer, gql } = require('apollo-server');
+const fs = require('fs');
+const https = require('https');
+const http = require('http');
+const express = require('express');
+const { ApolloServer } = require('apollo-server-express');
+const { typeDefs, resolvers } = require('./graphql/schema.js');
 
-// This is a (sample) collection of books we'll be able to query
-// the GraphQL server for.  A more complete example might fetch
-// from an existing data source like a REST API or database.
-const books = [
-  {
-    title: 'Harry Potter and the Chamber of Secrets',
-    author: 'J.K. Rowling',
-  },
-  {
-    title: 'Jurassic Park',
-    author: 'Michael Crichton',
-  },
-];
+const configurations = {
+  // Note: You may need sudo to run on port 443
+  production: { ssl: true, port: 443, hostname: 'example.com' },
+  development: { ssl: false, port: 4000, hostname: 'localhost' }
+}
 
-// Type definitions define the "shape" of your data and specify
-// which ways the data can be fetched from the GraphQL server.
-const typeDefs = gql`
-  # Comments in GraphQL are defined with the hash (#) symbol.
+const environment = process.env.NODE_ENV || 'development'
+const config = configurations[environment]
 
-  # This "Book" type can be used in other type declarations.
-  type Book {
-    title: String
-    author: String
-  }
+const apollo = new ApolloServer({ typeDefs, resolvers })
 
-  # The "Query" type is the root of all GraphQL queries.
-  # (A "Mutation" type will be covered later on.)
-  type Query {
-    books: [Book]
-  }
-`;
+const app = express()
+apollo.applyMiddleware({ app })
 
-// Resolvers define the technique for fetching the types in the
-// schema.  We'll retrieve books from the "books" array above.
-const resolvers = {
-  Query: {
-    books: () => books,
-  },
-};
+// Create the HTTPS or HTTP server, per configuration
+let server
+if (config.ssl) {
+  // Assumes certificates are in .ssl folder from package root. Make sure the files
+  // are secured.
+  // server = https.createServer(
+  //   {
+  //     key: fs.readFileSync(`./ssl/${environment}/server.key`),
+  //     cert: fs.readFileSync(`./ssl/${environment}/server.crt`)
+  //   },
+  //   app
+  // )
+} else {
+  server = http.createServer(app)
+}
 
-// In the most basic sense, the ApolloServer can be started
-// by passing type definitions (typeDefs) and the resolvers
-// responsible for fetching the data for those types.
-const server = new ApolloServer({ typeDefs, resolvers });
+// Add subscription support
+apollo.installSubscriptionHandlers(server)
 
-// This `listen` method launches a web-server.  Existing apps
-// can utilize middleware options, which we'll discuss later.
-server.listen().then(({ url }) => {
-  console.log(`🚀  Server ready at ${url}`);
-});
+server.listen({ port: config.port }, () =>
+  console.log(
+    '🚀 Server ready at',
+    `http${config.ssl ? 's' : ''}://${config.hostname}:${config.port}${apollo.graphqlPath}`
+  )
+)
