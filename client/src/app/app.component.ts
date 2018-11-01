@@ -1,13 +1,6 @@
 import { Component } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators
-} from '@angular/forms';
 import { Apollo } from 'apollo-angular';
-import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import gql from 'graphql-tag';
 import * as Query from './global-query';
 
 @Component({
@@ -20,8 +13,9 @@ export class AppComponent {
   title = 'Angular-Apollo';
   tasks: Array<any> = [];
   task: any = {};
-  validateForm: FormGroup;
   value: string;
+  valueToEdit: any = {};
+  isVisible = false;
 
   constructor(private apollo: Apollo) { }
 
@@ -67,5 +61,32 @@ export class AppComponent {
       }, (error) => {
         console.log('there was an error sending the query', error);
       });
+  }
+
+  edit(item): void {
+    this.valueToEdit = item;
+    this.isVisible = true;
+  }
+
+  handleOk(): void {
+    const { id, name } = this.valueToEdit;
+    this.isVisible = false;
+
+    this.apollo
+      .mutate({
+        mutation: Query.updateTask,
+        variables: {
+          id, name
+        }
+      })
+      .subscribe(({ data }) => {
+        console.log('data', data)
+      }, (error) => {
+        console.log('there was an error sending the query', error);
+      });
+  }
+
+  handleCancel(): void {
+    this.isVisible = false;
   }
 }

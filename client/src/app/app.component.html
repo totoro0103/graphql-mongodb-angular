@@ -21,4 +21,8 @@
   <ng-template #suffixButton>
     <button nz-button nzType="primary" nzSize="large" nzSearch (click)="createTask()">Add task</button>
   </ng-template>
+
+  <nz-modal [(nzVisible)]="isVisible" nzTitle="Edit task" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+    <input type="text" nz-input placeholder="input search text" [(ngModel)]="valueToEdit.name">
+  </nz-modal>
 </div>

@@ -60,6 +60,20 @@ export const resolvers = {
       } catch (e) {
         throw new Error('Error: ', e)
       }
+    },
+    updateTask: async (parent, { id, name }) => {
+      try {
+        const updatedTask = await Task.findByIdAndUpdate(
+          id,
+          { $set: { name } }
+        ).exec();
+
+        console.log('updatedTask', updatedTask);
+
+        return updatedTask;
+      } catch (e) {
+        throw new Error('Error: ', e)
+      }
     }
   },
 }

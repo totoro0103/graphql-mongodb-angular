@@ -9,6 +9,7 @@ const typeDef = gql`
   }
   type Mutation {
     addTask(name: String): Task!
+    updateTask(id: String, name: String): Task
     removeTask(id: String): Task
   }
 `;
