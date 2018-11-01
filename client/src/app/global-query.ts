@@ -14,9 +14,9 @@ export const addTask = gql`
     }
   }`;
 
-export const Tasks = gql`
+export const getAllTasks = gql`
   query {
-    tasks{
+    getAllTasks{
       id
       name
     }

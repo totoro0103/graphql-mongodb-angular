@@ -26,12 +26,12 @@ export class AppComponent {
 
   constructor(private apollo: Apollo) { }
   ngOnInit() {
-    this.apollo.watchQuery({ query: Query.Tasks })
+    this.apollo.watchQuery({ query: Query.getAllTasks })
       .valueChanges
       .pipe(
         map((result: any) => result.data)
       ).subscribe((data) => {
-        this.tasks = data.tasks;
+        this.tasks = data.getAllTasks;
       })
   }
 
@@ -53,12 +53,12 @@ export class AppComponent {
         },
         update: (proxy, { data: { addTask } }) => {
           // Read the data from our cache for this query.
-          const data: any = proxy.readQuery({ query: Query.Tasks });
+          const data: any = proxy.readQuery({ query: Query.getAllTasks });
 
           this.tasks.push(addTask);
 
           // Write our data back to the cache.
-          proxy.writeQuery({ query: Query.Tasks, data });
+          proxy.writeQuery({ query: Query.getAllTasks, data });
         }
       })
       .subscribe(({ data }) => {
@@ -79,13 +79,13 @@ export class AppComponent {
         },
         update: (proxy, { data: { removeTask } }) => {
           // Read the data from our cache for this query.
-          const data: any = proxy.readQuery({ query: Query.Tasks });
+          const data: any = proxy.readQuery({ query: Query.getAllTasks });
           console.log('data.tasks', data.tasks);
           const tasks = data.tasks.filter(task => task.id !== id);
           this.tasks = tasks;
 
           // Write our data back to the cache.
-          proxy.writeQuery({ query: Query.Tasks, data });
+          proxy.writeQuery({ query: Query.getAllTasks, data });
         }
       })
       .subscribe(({ data }) => {
