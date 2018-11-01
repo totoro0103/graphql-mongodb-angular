@@ -12,7 +12,6 @@ import * as Query from './global-query';
 
 @Component({
   selector: 'app-root',
-  // selector: 'nz-demo-input-search-input',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
@@ -25,6 +24,7 @@ export class AppComponent {
   value: string;
 
   constructor(private apollo: Apollo) { }
+
   ngOnInit() {
     this.apollo.watchQuery({ query: Query.getAllTasks })
       .valueChanges
@@ -34,14 +34,6 @@ export class AppComponent {
         this.tasks = data.getAllTasks;
       })
   }
-
-  submitForm(): void {
-    for (const i in this.validateForm.controls) {
-      this.validateForm.controls[i].markAsDirty();
-      this.validateForm.controls[i].updateValueAndValidity();
-    }
-  }
-
   createTask() {
     const { value } = this;
 
@@ -50,19 +42,10 @@ export class AppComponent {
         mutation: Query.addTask,
         variables: {
           name: value
-        },
-        update: (proxy, { data: { addTask } }) => {
-          // Read the data from our cache for this query.
-          const data: any = proxy.readQuery({ query: Query.getAllTasks });
-
-          this.tasks.push(addTask);
-
-          // Write our data back to the cache.
-          proxy.writeQuery({ query: Query.getAllTasks, data });
         }
       })
       .subscribe(({ data }) => {
-        // this.closeFirstModal(); // Close Modal
+        this.tasks = [...this.tasks, data.addTask];
       }, (error) => {
         console.log('there was an error sending the query', error);
       });
@@ -76,20 +59,11 @@ export class AppComponent {
         mutation: Query.removeTask,
         variables: {
           id: id
-        },
-        update: (proxy, { data: { removeTask } }) => {
-          // Read the data from our cache for this query.
-          const data: any = proxy.readQuery({ query: Query.getAllTasks });
-          console.log('data.tasks', data.tasks);
-          const tasks = data.tasks.filter(task => task.id !== id);
-          this.tasks = tasks;
-
-          // Write our data back to the cache.
-          proxy.writeQuery({ query: Query.getAllTasks, data });
         }
       })
       .subscribe(({ data }) => {
-        console.log(data)
+        const tasks = this.tasks.filter(task => task.id !== data.removeTask.id);
+        this.tasks = tasks;
       }, (error) => {
         console.log('there was an error sending the query', error);
       });

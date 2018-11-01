@@ -39,16 +39,18 @@ export const resolvers = {
   },
   Mutation: {
     addTask: (parent, { name }) => {
-      Task.create({ name }, (err, result) => {
-        const task = R.pipe(
-          R.pickAll(['_id', 'name']),
-          renameKeys({ _id: 'id' })
-        )(result.toJSON());
+      return new Promise((resolve, reject) => {
+        Task.create({ name }, (err, result) => {
+          const task = R.pipe(
+            R.pickAll(['_id', 'name']),
+            renameKeys({ _id: 'id' })
+          )(result.toJSON());
 
-        console.log({ task })
-        if (err) return console(err);
-        return task;
-      });
+          if (err) return reject(err);
+
+          resolve({ id: task.id.toString(), name: task.name });
+        });
+      })
     },
     removeTask: async (parent, { id }) => {
       try {

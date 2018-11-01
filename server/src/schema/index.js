@@ -8,7 +8,7 @@ const typeDef = gql`
     getAllTasks: [Task]
   }
   type Mutation {
-    addTask(name: String): Task
+    addTask(name: String): Task!
     removeTask(id: String): Task
   }
 `;
