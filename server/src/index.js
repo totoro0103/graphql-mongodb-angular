@@ -6,7 +6,7 @@ import { taskSchema } from './schema/task';
 const db = mongoose();
 const app = express();
 
-db.once('open', () => console.log('Connection establised with MongoDB'));
+db.once('open', () => console.log('Connection established with MongoDB'));
 
 app.use('*', cors());
 

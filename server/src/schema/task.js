@@ -8,5 +8,4 @@ export const taskSchema = new GraphQLSchema({
     name: 'Mutation',
     fields: mutation
   })
-})
-
+});
