@@ -1,6 +1,6 @@
 import axios from 'axios';
 import R from 'ramda';
-import TaskModel from './TaskModel';
+import Task from './TaskModel';
 
 export const typeDefs = `
   type Task {
@@ -26,15 +26,40 @@ const getIssues = async () => {
 };
 
 export const resolvers = {
-  getAllTasks: async () => {
-    const tasks = await TaskModel.find();
-    const issues = await getIssues();
+  Query: {
+    getAllTasks: async () => {
+      const tasks = await Task.find();
+      const issues = await getIssues();
 
-    return [...tasks, ...issues];
+      return [...tasks, ...issues];
+    },
+    task: (parent, arg) => {
+      return { name: arg.name }
+    },
   },
-  task: (parent, arg) => {
-    return { name: arg.name }
-  }
+  Mutation: {
+    addTask: (parent, { name }) => {
+      Task.create({ name }, (err, result) => {
+        const task = R.pipe(
+          R.pickAll(['_id', 'name']),
+          renameKeys({ _id: 'id' })
+        )(result.toJSON());
+
+        console.log({ task })
+        if (err) return console(err);
+        return task;
+      });
+    },
+    removeTask: async (parent, { id }) => {
+      try {
+        const removedtask = await Task.findByIdAndRemove(id).exec();
+
+        return removedtask;
+      } catch (e) {
+        throw new Error('Error: ', e)
+      }
+    }
+  },
 }
 
 export default {

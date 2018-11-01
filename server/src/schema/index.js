@@ -7,6 +7,10 @@ const typeDef = gql`
     task(name: String!): Task
     getAllTasks: [Task]
   }
+  type Mutation {
+    addTask(name: String): Task
+    removeTask(id: String): Task
+  }
 `;
 
 const typeDefs = [typeDef, TaskType.typeDefs]

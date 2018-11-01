@@ -1,7 +1,7 @@
 import express from 'express';
 import morgan from 'morgan';
 import { ApolloServer } from 'apollo-server-express';
-import typeDefs from './types/typeDefs';
+import typeDefs from './schema';
 import resolvers from './resolvers';
 
 const apolloServer = new ApolloServer({

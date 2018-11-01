@@ -2,7 +2,9 @@ import TaskType from '../modules/task'
 
 export default {
   Query: {
-    hello: () => 'Hello world!',
-    ...TaskType.resolvers,
+    ...TaskType.resolvers.Query,
   },
+  Mutation: {
+    ...TaskType.resolvers.Mutation,
+  }
 };

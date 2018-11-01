@@ -9,8 +9,8 @@ export const add = {
       type: new GraphQLNonNull(GraphQLString),
     }
   },
-  resolve(root, params) {
-    const uModel = new TaskModel(params);
+  resolve(root, args) {
+    const uModel = new TaskModel(args);
     const newTask = uModel.save();
     if (!newTask) {
       throw new Error('Error');
