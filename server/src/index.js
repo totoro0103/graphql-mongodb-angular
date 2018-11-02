@@ -10,7 +10,6 @@ const createUsersWithMessages = async date => {
   await models.User.deleteMany({});
   await models.Message.deleteMany({});
 
-  // and rise again
   await new models.User({
     username: 'vadimnicolai',
     email: 'nicolai.vadim@gmail.com',
@@ -20,6 +19,13 @@ const createUsersWithMessages = async date => {
     if (err) {
       console.log(err);
     } else {
+      await user.messages.push(
+        await new models.Message({
+          text: 'Another message',
+          createdAt: date.setSeconds(date.getSeconds() + 1),
+          user: user._id,
+        }).save(),
+      );
       await user.messages.push(
         await new models.Message({
           text: 'Another message',

@@ -25,4 +25,12 @@
   <nz-modal [(nzVisible)]="isVisible" nzTitle="Edit task" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
     <input type="text" nz-input placeholder="input search text" [(ngModel)]="valueToEdit.name">
   </nz-modal>
+
+  <ul>
+    <li *ngFor="let message of messages">
+      {{ message.text }}
+      <p>Username: {{ message.user.username }}</p>
+      <p>Email: {{ message.user.email }}</p>
+    </li>
+  </ul>
 </div>

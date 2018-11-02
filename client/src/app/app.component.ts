@@ -12,6 +12,7 @@ import * as Query from './global-query';
 export class AppComponent {
   title = 'Angular-Apollo';
   tasks: Array<any> = [];
+  messages: Array<any> = [];
   task: any = {};
   value: string;
   valueToEdit: any = {};
@@ -20,12 +21,26 @@ export class AppComponent {
   constructor(private apollo: Apollo) { }
 
   ngOnInit() {
+    this.getTasks();
+    this.getMessages();
+  }
+  getTasks() {
     this.apollo.watchQuery({ query: Query.getAllTasks })
       .valueChanges
       .pipe(
         map((result: any) => result.data)
       ).subscribe((data) => {
         this.tasks = data.getAllTasks;
+      })
+  }
+  getMessages() {
+    this.apollo.watchQuery({ query: Query.getAllMessages })
+      .valueChanges
+      .pipe(
+        map((result: any) => result.data)
+      ).subscribe((data) => {
+        this.messages = data.messages.edges;
+        console.log(this.messages)
       })
   }
   createTask() {

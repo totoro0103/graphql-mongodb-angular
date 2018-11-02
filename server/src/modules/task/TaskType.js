@@ -3,7 +3,6 @@ import R from 'ramda';
 import Task from './TaskModel';
 
 
-
 const getIssues = async () => {
   const { data: issuesRes } = await axios.get('https://api.github.com/repos/vadimnicolai/graphql-mongodb-angular/issues')
   const issues = R.map(
