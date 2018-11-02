@@ -1,9 +1,3 @@
-/**
- * Server Mutation Query
- */
-
-'use strict';
-
 import gql from 'graphql-tag';
 
 export const addTask = gql`
@@ -37,8 +31,6 @@ export const getAllMessages = gql`
     }
   }
 }`;
-
-
 
 export const removeTask = gql`
   mutation removeTask($id: String!) {

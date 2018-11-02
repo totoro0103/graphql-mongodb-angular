@@ -61,8 +61,6 @@ export default {
           { $set: { name } }
         ).exec();
 
-        console.log('updatedTask', updatedTask);
-
         return updatedTask;
       } catch (e) {
         throw new Error('Error: ', e)
