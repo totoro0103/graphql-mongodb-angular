@@ -1,19 +1,21 @@
 import { gql } from 'apollo-server-express';
-import TaskType from '../modules/task/TaskType'
 
-const typeDef = gql`
+import userSchema from './user';
+import messageSchema from './message';
+import taskSchema from './task';
+
+const linkSchema = gql`
   type Query {
-    hello: String
-    task(name: String!): Task
-    getAllTasks: [Task]
+    _: Boolean
   }
+
   type Mutation {
-    addTask(name: String): Task!
-    updateTask(id: String, name: String): Task
-    removeTask(id: String): Task
+    _: Boolean
+  }
+
+  type Subscription {
+    _: Boolean
   }
 `;
 
-const typeDefs = [typeDef, TaskType.typeDefs]
-
-export default typeDefs;
+export default [linkSchema, userSchema, messageSchema, taskSchema];

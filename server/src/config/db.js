@@ -5,7 +5,7 @@ mongoose.Promise = global.Promise;
 
 export default function connectToDb() {
   return mongoose
-    .connect(process.env.DB_URL)
+    .connect(process.env.DB_URL, { useNewUrlParser: true })
     .then(() => console.log(`Connected to MongoDB: ${chalk.cyan(process.env.DB_URL)}`))
     .catch(err => console.log(`Error occured while connection was being made: ${chalk.red(err.message)}`));
 };

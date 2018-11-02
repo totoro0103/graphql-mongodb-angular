@@ -2,16 +2,7 @@ import axios from 'axios';
 import R from 'ramda';
 import Task from './TaskModel';
 
-export const typeDefs = `
-  type Task {
-    id: String
-    name: String
-  }
-`
 
-const renameKeys = R.curry((keysMap, obj) =>
-  R.reduce((acc, key) => R.assoc(keysMap[key] || key, obj[key], acc), {}, R.keys(obj))
-);
 
 const getIssues = async () => {
   const { data: issuesRes } = await axios.get('https://api.github.com/repos/vadimnicolai/graphql-mongodb-angular/issues')

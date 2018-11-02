@@ -1,10 +1,5 @@
-import TaskType from '../modules/task'
+import userResolvers from './user';
+import messageResolvers from './message';
+import taskResolvers from './task';
 
-export default {
-  Query: {
-    ...TaskType.resolvers.Query,
-  },
-  Mutation: {
-    ...TaskType.resolvers.Mutation,
-  }
-};
+export default [userResolvers, messageResolvers, taskResolvers];

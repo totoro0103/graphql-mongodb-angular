@@ -22,6 +22,24 @@ export const getAllTasks = gql`
     }
   }`;
 
+export const getAllMessages = gql`
+  query {
+    messages {
+    edges {
+      id
+      text
+      createdAt
+      user {
+        email
+        username
+        role
+      }
+    }
+  }
+}`;
+
+
+
 export const removeTask = gql`
   mutation removeTask($id: String!) {
     removeTask(id: $id) {
